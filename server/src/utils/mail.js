@@ -1,14 +1,18 @@
 import Mailgen from "mailgen";
 import nodemailer from "nodemailer";
-import dotenv from "dotenv"
+import dotenv from "dotenv";
 import logger from "../logger/wiston.logger.js";
-
-dotenv.config({ path: "./.env" });
-
+import path from "path";
+import { fileURLToPath } from "url";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+dotenv.config({ path: path.resolve(__dirname, "../../.env") });
 /**
  *
  * @param {{email: string; subject: string; mailgenContent: Mailgen.Content; }} options
  */
+
+
 const sendEmail = async (options) => {
   // Initialize mailgen instance with default theme and brand configuration
   const mailGenerator = new Mailgen({
@@ -29,13 +33,15 @@ const sendEmail = async (options) => {
   // Create a nodemailer transporter instance which is responsible to send a mail
   const transporter = nodemailer.createTransport({
     host: "sandbox.smtp.mailtrap.io",
-    port: 2525,
+    port: 587,
     auth: {
       user: process.env.MAILTRAP_SMTP_USER,
       pass: process.env.MAILTRAP_SMTP_PASS,
     },
+    
   });
-
+   
+  
   const mail = {
     from: "mail.rag@gmail.com", // We can name this anything. The mail will go to your Mailtrap inbox
     to: options.email, // receiver's mail

@@ -76,7 +76,7 @@ const uploadMultiFileRAG = asyncHandler(async (req, res) => {
         uploadResult.secure_url
       );
 
-      // 📥 Queue job for vector processing
+      // Queue job for vector processing
       await queue.add(
         "file-ready",
         {

@@ -31,6 +31,19 @@ services:
     depends_on:
       - redis
       - qdrant
+  workeremail:
+    build:
+      context: ./server
+    container_name: app_emailworker
+    command: npm run dev:workeremail
+
+    volumes:
+      - ./server:/app
+    restart: always
+    networks:
+      - app-network
+    depends_on:
+      - redis
 
   client:
     build:
@@ -45,7 +58,7 @@ services:
       - backend
     restart: always
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:3000" ]
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -81,7 +94,6 @@ services:
 
 volumes:
   data:
-
 
 networks:
   app-network:

@@ -7,6 +7,13 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { COMPANY } from "../models/company.models.js";
 import { AllowedCompanyAdmin } from "../models/superadmin.models.js";
+import { Queue } from "bullmq";
+
+const queue = new Queue("EmailQueue", {
+  connection: {
+    url: "redis://redis:6379",
+  },
+});
 import {
   emailVerificationMailgenContent,
   forgotPasswordMailgenContent,
@@ -100,18 +107,23 @@ const registerUser = asyncHandler(async (req, res) => {
   user.emailVerificationExpiry = tokenExpiry;
   await user.save({ validateBeforeSave: false });
 
-  // Send verification email
-  await sendEmail({
-    email: user.email,
-    subject: "Please verify your email",
-    mailgenContent: emailVerificationMailgenContent(
-      user.username,
-      `${req.protocol}://${req.get(
-        "host"
-      )}/api/v1/users/verify-email/${unHashedToken}`
-    ),
-  });
+  // Queue job for email processing
+  await queue.add(
+    "emailqueue",
+    {
+      username:user?.username,
+      email:user?.email,
+      unHashedToken,
+      request:req.get("host"),
+      protocol:req.protocol
+    },
+    {
+      attempts: 3,
+      backoff: { type: "exponential", delay: 5000 },
+    }
+  );
 
+  
   // Return user info without sensitive fields
   const createdUser = await User.findById(user._id).select(
     "-password -refreshToken -emailVerificationToken -emailVerificationExpiry"
