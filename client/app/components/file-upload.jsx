@@ -135,6 +135,7 @@ const FileUploadComponent = ({ onUploadSuccess }) => {
       const res = await fetch("http://localhost:8001/api/v1/uploads/pdf", {
         method: "POST",
         body: formData,
+        credentials: "include"
       });
 
       clearInterval(progressInterval);
@@ -207,7 +208,7 @@ const FileUploadComponent = ({ onUploadSuccess }) => {
       </div>
 
       <p className="text-sm text-gray-500">
-        Supported files: PDF, DOCX, JPEG, PNG (Max size: 5MB each)
+        Supported files: PDF, DOCX, JPEG, PNG, TXT, CSV (Max size: 5MB each)
       </p>
 
       {uploadStatus.state !== "idle" && (
