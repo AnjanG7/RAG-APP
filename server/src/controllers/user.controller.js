@@ -111,11 +111,11 @@ const registerUser = asyncHandler(async (req, res) => {
   await queue.add(
     "emailqueue",
     {
-      username:user?.username,
-      email:user?.email,
+      username: user?.username,
+      email: user?.email,
       unHashedToken,
-      request:req.get("host"),
-      protocol:req.protocol
+      request: req.get("host"),
+      protocol: req.protocol,
     },
     {
       attempts: 3,
@@ -123,7 +123,6 @@ const registerUser = asyncHandler(async (req, res) => {
     }
   );
 
-  
   // Return user info without sensitive fields
   const createdUser = await User.findById(user._id).select(
     "-password -refreshToken -emailVerificationToken -emailVerificationExpiry"
