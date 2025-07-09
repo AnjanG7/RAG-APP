@@ -95,7 +95,7 @@ const FileUploadComponent = ({ onUploadSuccess }) => {
       if (!supportedTypes.includes(file.type)) {
         setUploadStatus({
           state: "error",
-          message: "Supported formats: PDF, DOCX, JPEG, PNG,TXT",
+          message: "Supported formats: PDF, DOCX, JPEG, PNG, TXT, CSV",
         });
         return;
       }
@@ -132,7 +132,7 @@ const FileUploadComponent = ({ onUploadSuccess }) => {
         setUploadStatus((prev) => ({ ...prev, progress }));
       }, 300);
 
-      const res = await fetch("http://localhost:8001/ap1/v1/uploads/pdf", {
+      const res = await fetch("http://localhost:8001/api/v1/uploads/pdf", {
         method: "POST",
         body: formData,
       });
