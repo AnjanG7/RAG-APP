@@ -2,7 +2,7 @@
 
 Thanks to all these awesome people for their contributions:
 
-- [@emmetCode](https://github.com/emmetCode)
+- [@emmetCode](https://github.com/emmetCode) -----> frontend developer
 
 
 RAG-APP is a scalable, document-based Retrieval-Augmented Generation (RAG) system designed for querying and processing diffrent file documents. Built with a modern tech stack including Node.js, MongoDB, QdrantDB, Redis, express, Cohere LLM for embedding and a microservices architecture. Rag-PDF supports background workers for efficient task management and seamless scalability in production environments.
